@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    
+    <title>BikerBit</title>
+    
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    
+    <link href="{{ static_url('css/bootstrap/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ static_url('css/bootstrap/bootswatch-cerulean.css') }}" rel="stylesheet" />
+
+    <script src="{{ static_url('js/jquery/jquery-1.11.1.min.js') }}"></script>
+    <script src="{{ static_url('js/bootstrap/bootstrap.min.js') }}"></script>
+
+  </head>
+
+  <body>
+
+    <div id="bb-wrapper" class="container-fluid">
+
+      <div id="bb-navbar" class="navbar navbar-default">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">BikerBit</a>
+        </div>
+        <div class="navbar-collapse collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">About BB</a></li>
+                <li><a href="#">Instructions</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Link</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>      
+
+      {% block bb_index %}{% end %}
+
+    </div>
+
+  </body>
+
+</html>
