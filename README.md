@@ -1,4 +1,4 @@
-bikerbit
+BikerBit
 ========
 
 BikerBit
