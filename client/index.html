@@ -11,17 +11,28 @@
           <h3>Low-Cost Tracker for Bike Commuters</h3>
           <h4>Check Your Cycling Distance &amp; Speed!</h4>
           <hr class="intro-divider">
-          <ul class="list-inline intro-social-buttons">
-            <li>
+          <!-- <ul class="list-inline intro-social-buttons"> -->
+            <!-- <li> -->
               <form id="uploadForm" enctype="multipart/form-data" action="/upload" method="post">
-                <span class="btn btn-default btn-lg fileinput-button">
+
+                <div class="col-lg-offset-3 col-md-4 col-lg-4">
+                  <input id="diameterInput" name="diameterArg" type="text" placeholder="How large is your bike wheel?" class="form-control input-md" maxlength="3" /><br />
+                </div>
+                <div class="col-md-2 col-lg-2">
+                  <select id="unitSelect" name="unitArg" class="form-control input-md">
+                    <option value="inch">Inches</option>
+                    <option value="cm">Centimeters</option>
+                  </select>
+                </div>
+
+                <div class="col-lg-offset-4 col-md-4 col-lg-4 btn btn-default btn-lg fileinput-button">
                   <i class="fa fa-cloud-upload"></i>
-                  <span class="network-name">&emsp;Upload Your BikerBit.txt</span>
-                    <input id="uploadFile" name="fileArg" type="file" accept=".txt" />
-                </span>
+                  <div class="network-name">&emsp;Upload Your BikerBit.dat</div>
+                    <input id="uploadFile" name="fileArg" type="file" accept=".dat" />
+                </div>
               </form>
-            </li>
-          </ul>
+            <!-- </li> -->
+          <!-- </ul> -->
         </div>
       </div>
     </div>
