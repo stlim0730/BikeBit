@@ -1,6 +1,7 @@
 {
   "serverOptions": {
     "port": 8888,
-    "clientPath": "client"
+    "clientPath": "client",
+    "uploadPath": "server/upload"
   }
 }

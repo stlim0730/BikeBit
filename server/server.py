@@ -1,5 +1,6 @@
 import sys
 import os
+import uuid
 import tornado
 from tornado import web
 from tornado import gen
@@ -20,6 +21,7 @@ serverConf = readJsonFile(serverConfFile)
 
 serverPort = serverConf["serverOptions"]["port"]
 clientPath = os.path.join(ROOT_PATH, serverConf["serverOptions"]["clientPath"])
+uploadPath = os.path.join(ROOT_PATH, serverConf["serverOptions"]["uploadPath"])
 imagePath = clientPath + "/img";
 # END CONFIGURATION
 
@@ -29,6 +31,19 @@ class indexPageHandler(tornado.web.RequestHandler):
   def get(self):
     self.render("index.html")
     bbLog("called indexPageHandler")
+
+class uploadHandler(tornado.web.RequestHandler):
+  def post(self):
+    fileObj = self.request.files["fileArg"][0]
+    fileName = fileObj["filename"]
+    extension = os.path.splitext(fileName)[1]
+    tempFileName = str(uuid.uuid4()) + extension
+    fileHandler = open(uploadPath + tempFileName, "w")
+    fileHandler.write(fileObj["body"])
+    # # self.finish(tempFileName + " is uploaded!! Check %s folder" %uploadPath)
+    # bbLog(tempFileName)
+    # self.render("bikerBit.html")
+    bbLog("called uploadHandler")
 
 class bikerBitPageHandler(tornado.web.RequestHandler):
   @gen.coroutine
@@ -43,7 +58,8 @@ serverApp = tornado.web.Application(
   [
     (r"/", indexPageHandler),
     (r"/img/(.*)", tornado.web.StaticFileHandler, {"path": imagePath}),
-    (r"/bikerBit", bikerBitPageHandler)
+    (r"/upload", uploadHandler),
+    (r"/bikerBit", bikerBitPageHandler),
   ],
   static_path=clientPath,
   template_path=clientPath,
