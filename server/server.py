@@ -8,6 +8,8 @@ from tornado import template
 from myUtility import *
 
 # START CONSTANTS
+SECOND = 1000
+
 SERVER_PATH = os.path.dirname(__file__)
 ROOT_PATH = os.path.join(SERVER_PATH, os.pardir)
 DEFAULT_SERVER_CONF = os.path.join(SERVER_PATH, "conf/bikerBitServerConf.json")
@@ -21,7 +23,7 @@ serverConf = readJsonFile(serverConfFile)
 
 serverPort = serverConf["serverOptions"]["port"]
 clientPath = os.path.join(ROOT_PATH, serverConf["serverOptions"]["clientPath"])
-uploadPath = os.path.join(ROOT_PATH, serverConf["serverOptions"]["uploadPath"])
+uploadPath = os.path.join(SERVER_PATH, serverConf["serverOptions"]["uploadPath"])
 imagePath = clientPath + "/img";
 # END CONFIGURATION
 
@@ -38,7 +40,7 @@ class uploadHandler(tornado.web.RequestHandler):
     fileName = fileObj["filename"]
     extension = os.path.splitext(fileName)[1]
     tempFileName = str(uuid.uuid4()) + extension
-    uploadFileHandler = open(tempFileName, "w")
+    uploadFileHandler = open(uploadPath + tempFileName, "w")
     uploadFileHandler.write(fileObj["body"])
     uploadFileHandler.close()
     readHandler = readTextFile(tempFileName)
@@ -49,26 +51,44 @@ class uploadHandler(tornado.web.RequestHandler):
     # self.render("bikerBit.html")
     bbLog("called uploadHandler")
 
-  def process(self, fileHandler):
-    cnt = 0
-    result = []
-    tempList = []
+  def process(fileHandler):
+    lineCnt = 0 # LINE COUNT OF INPUT FILE
+    triggerCnt = 0 # COUNT OF DATA POINT
+    tempList = [] # TEMPORARY LIST
+    triggerLists = [] # GROUPED DATA POINT
+    deltaTLists = [] # LIST OF DELTA T
+    maxList = [] # MAXIMUM VALUES OF EACH TRIGGER
+    # results = {"data": { "xs":{}, "columns":[] }}
     line = fileHandler.readline()
     while line!="":
       num = int(line)
-      if cnt == 0:
+      if lineCnt == 0:
+        # FIRST DATA
         tempList.append(num)
-      elif num >= tempList[cnt-1]:
+      elif num >= tempList[lineCnt-1]:
+        # KEEP GOING
         tempList.append(num)
-      elif num < tempList[cnt-1]:
-        result.append(tempList)
+      elif num < tempList[lineCnt-1]:
+        # NEW LIST
+        triggerLists.append(tempList)
+        maxList.append(tempList[-1])
         tempList = [num]
-        cnt = 0
+        lineCnt = 0
       else:
-        bbLog("Unexpected condition")
-      cnt += 1
+        print "Unexpected condition"
+      lineCnt += 1
       line = fileHandler.readline()
-    return result
+    triggerLists.append(tempList) # THE FINAL LIST
+    maxList.append(tempList[-1]) # THE ITEM IN THE FINAL LIST
+    for triggers in triggerLists:
+      # FOR EACH TRIGGER DATA GROUP
+      deltaTs = []
+      deltaTs.append(0)
+      for i in range(1, len(triggers)):
+        deltaTs.append((triggers[i] - triggers[i-1]) / SECOND) # DELTA T PER ROTATION IN SECONDS
+      deltaTLists.append(deltaTs)
+      triggerCnt += 1
+    return deltaTLists
 
 # class bikerBitPageHandler(tornado.web.RequestHandler):
 #   @gen.coroutine

@@ -78,20 +78,6 @@ void setup()
   // START SETTING STATUS LED MODULE
   pinMode(LED_PIN, OUTPUT);
   // END SETTING STATUS LED MODULE
-  
-  // START BLINKING LED WHEN READY
-//  analogWrite(LED_PIN, HIGH);
-//  delayMicroseconds(SECOND);
-//  analogWrite(LED_PIN, LOW);
-//  delayMicroseconds(SECOND);
-//  analogWrite(LED_PIN, HIGH);
-//  delayMicroseconds(SECOND);
-//  analogWrite(LED_PIN, LOW);
-//  delayMicroseconds(SECOND);
-//  analogWrite(LED_PIN, HIGH);
-//  delayMicroseconds(SECOND);
-//  analogWrite(LED_PIN, LOW);
-  // END BLINKING LED WHEN READY
 }
 
 void loop()
