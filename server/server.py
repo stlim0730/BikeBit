@@ -38,19 +38,44 @@ class uploadHandler(tornado.web.RequestHandler):
     fileName = fileObj["filename"]
     extension = os.path.splitext(fileName)[1]
     tempFileName = str(uuid.uuid4()) + extension
-    fileHandler = open(uploadPath + tempFileName, "w")
-    fileHandler.write(fileObj["body"])
-    # # self.finish(tempFileName + " is uploaded!! Check %s folder" %uploadPath)
-    # bbLog(tempFileName)
+    uploadFileHandler = open(tempFileName, "w")
+    uploadFileHandler.write(fileObj["body"])
+    uploadFileHandler.close()
+    readHandler = readTextFile(tempFileName)
+    result = self.process(readHandler)
+    readHandler.close()
+    self.write("OK")
+    # self.finish(tempFileName + " is uploaded!! Check %s folder" %uploadPath)
     # self.render("bikerBit.html")
     bbLog("called uploadHandler")
 
-class bikerBitPageHandler(tornado.web.RequestHandler):
-  @gen.coroutine
-  def get(self):
-    mode = self.get_query_argument("mode")
-    self.render("bikerBit.html", mode=mode)
-    bbLog("called bikerBitPageHandler")
+  def process(self, fileHandler):
+    cnt = 0
+    result = []
+    tempList = []
+    line = fileHandler.readline()
+    while line!="":
+      num = int(line)
+      if cnt == 0:
+        tempList.append(num)
+      elif num >= tempList[cnt-1]:
+        tempList.append(num)
+      elif num < tempList[cnt-1]:
+        result.append(tempList)
+        tempList = [num]
+        cnt = 0
+      else:
+        bbLog("Unexpected condition")
+      cnt += 1
+      line = fileHandler.readline()
+    return result
+
+# class bikerBitPageHandler(tornado.web.RequestHandler):
+#   @gen.coroutine
+#   def get(self):
+#     mode = self.get_query_argument("mode")
+#     self.render("bikerBit.html", mode=mode)
+#     bbLog("called bikerBitPageHandler")
 # END HANDLERS
 
 # START INITIALIZATION
@@ -58,8 +83,8 @@ serverApp = tornado.web.Application(
   [
     (r"/", indexPageHandler),
     (r"/img/(.*)", tornado.web.StaticFileHandler, {"path": imagePath}),
-    (r"/upload", uploadHandler),
-    (r"/bikerBit", bikerBitPageHandler),
+    (r"/upload", uploadHandler)
+    # (r"/bikerBit", bikerBitPageHandler),
   ],
   static_path=clientPath,
   template_path=clientPath,

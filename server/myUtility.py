@@ -23,6 +23,9 @@ def randomInt(inclusiveMin, exlusiveMax):
 def readJsonFile(filename):
   return json.load(open(filename))
 
+def readTextFile(filename):
+  return open(filename, "r") 
+
 def printJsonObj(obj, fname="", i=2):
   if obj is None:
     print "JSON object is None"
