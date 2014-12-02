@@ -84,12 +84,11 @@ class uploadHandler(tornado.web.RequestHandler):
     #   ]
     # }
     # END TARGET DATA FORMAT
-    results = { "data": { "xs":{}, "columns":[], "type": "spline" } } # RESULTS TO RETURN
+    results = { "data": { "xs":{}, "columns":[]} } # RESULTS TO RETURN
     lineCnt = 0 # LINE COUNT OF INPUT FILE
     tempList = [] # TEMPORARY LIST
     triggerLists = [] # GROUPED DATA POINT
     instVLists = [] # LIST OF INSTANTANEOUS V
-    maxList = [] # MAXIMUM VALUES OF EACH TRIGGER
     # START INPUT RAW DATA
     line = fileHandler.readline()
     while line!="":
@@ -103,7 +102,6 @@ class uploadHandler(tornado.web.RequestHandler):
       elif num < tempList[lineCnt-1]:
         # NEW LIST
         triggerLists.append(tempList)
-        maxList.append(tempList[-1])
         tempList = [num]
         lineCnt = 0
       else:
@@ -111,12 +109,14 @@ class uploadHandler(tornado.web.RequestHandler):
       lineCnt += 1
       line = fileHandler.readline()
     triggerLists.append(tempList) # THE FINAL LIST
-    maxList.append(tempList[-1]) # THE ITEM IN THE FINAL LIST
     # END INPUT RAW DATA
     # START FORMATTING DATA
     triggerCnt = 0 # COUNT OF DATA POINT
     triggerListCnt = 0 # COUNT OF GROUP OF DATA POINT
     deltaD = PI * diameter # DISTANCE TRAVELED PER ROTATION
+    maxInstV = 0
+    instVCnt = 0
+    instVSum = 0
     for triggers in triggerLists:
       # FOR EACH TRIGGER DATA GROUP
       instVs = []
@@ -130,7 +130,10 @@ class uploadHandler(tornado.web.RequestHandler):
           instV = (((deltaD / FOOT) / MILE) * MINUTE * HOUR) / deltaT # INSTANTANEOUS VELOCITY PER ROTATION (mph)
         instVs.append(instV)
         triggerCnt += 1
+      instVCnt += len(instVs)
+      instVSum += sum(instVs)
       instVLists.append(instVs)
+      maxInstV = max(maxInstV, max(instVs))
       triggerListCnt += 1
       xName = "x" + str(triggerListCnt)
       yName = DATA_LABEL + str(triggerListCnt)
@@ -139,6 +142,16 @@ class uploadHandler(tornado.web.RequestHandler):
       results["data"]["xs"][yName] = xName
       results["data"]["columns"].append(triggers)
       results["data"]["columns"].append(instVs)
+    results["maxInstV"] = maxInstV
+    results["avgInstV"] = instVSum / instVCnt
+    if unit == "cm":
+      results["unitV"] = "km/h"
+      results["unitD"] = "km"
+      results["totalD"] = ((triggerCnt * diameter * PI) / M) / KM
+    else:
+      results["unitV"] = "mph"
+      results["unitD"] = "miles"
+      results["totalD"] = ((triggerCnt * diameter * PI) / FOOT) / MILE
     # END FORMATTING DATA
     return results
 

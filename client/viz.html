@@ -4,13 +4,53 @@
 {% block bb_viz %}
 
 <div class="container">
+  
   <div class="row">
     <div class="col-lg-12">
-      <div id="bb-chart">
+      <div class="bb-viz-header">
+        <h3>BikeBit Data Visualization<br/></h3>
+        <h4><br/>Total distance travelled: <span id="bb-totalDist"></span></h4>
+        <h4>Your maximum instantaneous velocity: <span id="bb-maxV"></span></h4>
+        <h4>Your average velocity: <span id="bb-avgV"></span></h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div id="bb-chart" class="bb-viz-content-section-a">
       </div>
     </div>
   </div>
 </div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <ul class="list-inline">
+          <li>
+            <a href="index#bb-top">Top</a>
+          </li>
+          <li class="footer-menu-divider">&sdot;</li>
+          <li>
+            <a href="index#bb-about">About</a>
+          </li>
+          <li class="footer-menu-divider">&sdot;</li>
+          <li>
+            <a href="index#bb-instructions">Instructions</a>
+          </li>
+          <li class="footer-menu-divider">&sdot;</li>
+          <li>
+            <a href="index#bb-contact">Contact</a>
+          </li>
+        </ul>
+        <p class="copyright text-muted small">Copyright &copy; Seongtaek Lim 2014. All Rights Reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
 
 <script>
   bikeBitData = {% raw data %}
