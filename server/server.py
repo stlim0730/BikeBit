@@ -6,6 +6,7 @@ import os
 import uuid
 import tornado
 from tornado import web
+from tornado import wsgi
 from tornado import gen
 from tornado import template
 from myUtility import *
@@ -165,7 +166,7 @@ class uploadHandler(tornado.web.RequestHandler):
 # END HANDLERS
 
 # START INITIALIZATION
-serverApp = tornado.web.Application(
+serverApp = tornado.wsgi.WSGIApplication(
   [
     (r"/", indexPageHandler),
     (r"/index(.*)", indexPageBookmarkHandler),
