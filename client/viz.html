@@ -1,0 +1,20 @@
+<!-- AUTHOR: SEONGTAEK LIM (seongtaek.lim0730@gmail.com) -->
+
+{% extends "main_base.html" %}
+{% block bb_viz %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <div id="bb-chart">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  bikeBitData = {% raw data %}
+</script>
+<script src="{{ static_url('js/viz.js') }}"></script>
+
+{% end %}

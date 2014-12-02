@@ -18,6 +18,7 @@ M = 100
 KM = 1000
 FOOT = 12
 MILE = 5280
+DATA_LABEL = "BikeBit Record"
 
 SERVER_PATH = os.path.dirname(__file__)
 ROOT_PATH = os.path.join(SERVER_PATH, os.pardir)
@@ -43,6 +44,12 @@ class indexPageHandler(tornado.web.RequestHandler):
     self.render("index.html")
     bbLog("called indexPageHandler")
 
+class indexPageBookmarkHandler(tornado.web.RequestHandler):
+  @gen.coroutine
+  def get(self, bookmark):
+    self.render("index.html" + bookmark)
+    bbLog("called indexPageBookmarkHandler")
+
 class uploadHandler(tornado.web.RequestHandler):
   def post(self):
     diameter = float(self.get_argument("diameterArg"))
@@ -57,9 +64,9 @@ class uploadHandler(tornado.web.RequestHandler):
     readHandler = readTextFile(tempFileName)
     results = self.process(readHandler, diameter, unit)
     readHandler.close()
-    self.write(results)
+    # self.write(tornado.escape.json_encode(results))
     # self.finish(tempFileName + " is uploaded!! Check %s folder" %uploadPath)
-    # self.render("bikeBit.html")
+    self.render("viz.html", data=tornado.escape.json_encode(results))
     bbLog("called uploadHandler")
 
   def process(self, fileHandler, diameter, unit):
@@ -77,7 +84,7 @@ class uploadHandler(tornado.web.RequestHandler):
     #   ]
     # }
     # END TARGET DATA FORMAT
-    results = { "data": { "xs":{}, "columns":[] } }
+    results = { "data": { "xs":{}, "columns":[], "type": "spline" } } # RESULTS TO RETURN
     lineCnt = 0 # LINE COUNT OF INPUT FILE
     tempList = [] # TEMPORARY LIST
     triggerLists = [] # GROUPED DATA POINT
@@ -126,13 +133,12 @@ class uploadHandler(tornado.web.RequestHandler):
       instVLists.append(instVs)
       triggerListCnt += 1
       xName = "x" + str(triggerListCnt)
-      yName = "data" + str(triggerListCnt)
+      yName = DATA_LABEL + str(triggerListCnt)
       triggers.insert(0, xName)
       instVs.insert(0, yName)
       results["data"]["xs"][yName] = xName
       results["data"]["columns"].append(triggers)
       results["data"]["columns"].append(instVs)
-      results["data"]["type"] = "spline"
     # END FORMATTING DATA
     return results
 
@@ -148,6 +154,7 @@ class uploadHandler(tornado.web.RequestHandler):
 serverApp = tornado.web.Application(
   [
     (r"/", indexPageHandler),
+    (r"/index(.*)", indexPageBookmarkHandler),
     (r"/img/(.*)", tornado.web.StaticFileHandler, {"path": imagePath}),
     (r"/upload", uploadHandler)
     # (r"/bikeBit", bikeBitPageHandler),

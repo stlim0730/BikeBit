@@ -17,12 +17,14 @@
     <link href="{{ static_url('css/font-awesome/font-awesome.min.css') }}" rel="stylesheet" />
     <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
     <link href="{{ static_url('css/jquery-fileupload/jquery.fileupload.css') }}" rel="stylesheet" />
+    <link href="{{ static_url('css/c3/c3.min.css') }}" rel="stylesheet" />
 
     <script src="{{ static_url('js/jquery/jquery-1.11.1.min.js') }}"></script>
     <script src="{{ static_url('js/bootstrap/bootstrap.min.js') }}"></script>
+    <script src="{{ static_url('js/d3/d3.min.js') }}"></script>
+    <script src="{{ static_url('js/c3/c3.min.js') }}"></script>
     <script src="{{ static_url('js/util.js') }}"></script>
     <script src="{{ static_url('js/init.js') }}"></script>
-    <script src="{{ static_url('js/main.js') }}"></script>
 
   </head>
 
@@ -45,13 +47,13 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="#bb-about">About</a>
+                        <a href="index#bb-about">About</a>
                     </li>
                     <li>
-                        <a href="#bb-instructions">Instructions</a>
+                        <a href="index#bb-instructions">Instructions</a>
                     </li>
                     <li>
-                        <a href="#bb-contact">Contact</a>
+                        <a href="index#bb-contact">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -61,34 +63,7 @@
     </nav>
 
     {% block bb_index %}{% end %}
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <ul class="list-inline">
-                        <li>
-                            <a href="#bb-top">Top</a>
-                        </li>
-                        <li class="footer-menu-divider">&sdot;</li>
-                        <li>
-                            <a href="#bb-about">About</a>
-                        </li>
-                        <li class="footer-menu-divider">&sdot;</li>
-                        <li>
-                            <a href="#bb-instructions">Instructions</a>
-                        </li>
-                        <li class="footer-menu-divider">&sdot;</li>
-                        <li>
-                            <a href="#bb-contact">Contact</a>
-                        </li>
-                    </ul>
-                    <p class="copyright text-muted small">Copyright &copy; Seongtaek Lim 2014. All Rights Reserved.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+    {% block bb_viz %}{% end %}
 
   </body>
 

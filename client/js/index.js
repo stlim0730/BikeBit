@@ -28,4 +28,8 @@ $(document).ready(function() {
   });
   // END SUBMITTING FORM VALUES
   // END FILE UPLOAD MODULE
+
+  // START
+  $("#diameterInput").focus();
+  // END
 });
