@@ -1,5 +1,5 @@
 /*
- TITLE: BikerBit
+ TITLE: BikeBit
  AUTHOR: Seongtaek Lim
  LATEST UPDATE: Nov 27 2014
  
@@ -51,7 +51,7 @@
 // END CONSTANTS
 
 // START GLOBAL VARIABLES
-char FILE_NAME[] = "BikerBit.dat";
+char FILE_NAME[] = "BikeBit.dat";
 byte hallState = 0;
 // END GLOBAL VARIABLES
 
@@ -110,4 +110,3 @@ void loop()
   
   // delay(LOOP_DELAY);
 }
-

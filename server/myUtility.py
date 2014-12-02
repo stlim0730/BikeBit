@@ -86,5 +86,5 @@ def getTimeString():
   return time.strftime("%H:%M:%S")
 
 def bbLog(s):
-  print "#BikerBit [" + getTimeString() + "] - " + s
+  print "#BikeBit [" + getTimeString() + "] - " + s
 # END UTILITY FUNCTIONS

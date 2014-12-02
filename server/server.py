@@ -14,7 +14,7 @@ SECOND = 1000
 
 SERVER_PATH = os.path.dirname(__file__)
 ROOT_PATH = os.path.join(SERVER_PATH, os.pardir)
-DEFAULT_SERVER_CONF = os.path.join(SERVER_PATH, "conf/bikerBitServerConf.json")
+DEFAULT_SERVER_CONF = os.path.join(SERVER_PATH, "conf/bikeBitServerConf.json")
 # END CONSTANTS
 
 # START CONFIGURATION
@@ -52,7 +52,7 @@ class uploadHandler(tornado.web.RequestHandler):
     readHandler.close()
     self.write("OK")
     # self.finish(tempFileName + " is uploaded!! Check %s folder" %uploadPath)
-    # self.render("bikerBit.html")
+    # self.render("bikeBit.html")
     bbLog("called uploadHandler")
 
   def process(self, fileHandler):
@@ -94,12 +94,12 @@ class uploadHandler(tornado.web.RequestHandler):
       triggerCnt += 1
     return deltaTLists
 
-# class bikerBitPageHandler(tornado.web.RequestHandler):
+# class bikeBitPageHandler(tornado.web.RequestHandler):
 #   @gen.coroutine
 #   def get(self):
 #     mode = self.get_query_argument("mode")
-#     self.render("bikerBit.html", mode=mode)
-#     bbLog("called bikerBitPageHandler")
+#     self.render("bikeBit.html", mode=mode)
+#     bbLog("called bikeBitPageHandler")
 # END HANDLERS
 
 # START INITIALIZATION
@@ -108,7 +108,7 @@ serverApp = tornado.web.Application(
     (r"/", indexPageHandler),
     (r"/img/(.*)", tornado.web.StaticFileHandler, {"path": imagePath}),
     (r"/upload", uploadHandler)
-    # (r"/bikerBit", bikerBitPageHandler),
+    # (r"/bikeBit", bikeBitPageHandler),
   ],
   static_path=clientPath,
   template_path=clientPath,
@@ -117,7 +117,7 @@ serverApp = tornado.web.Application(
 # END INITIALIZATION
 
 # START
-bbLog("BikerBit server has started")
+bbLog("BikeBit server has started")
 serverApp.listen(serverPort)
 bbLog("The server is listening on port " + str(serverPort))
 tornado.ioloop.IOLoop.instance().start()

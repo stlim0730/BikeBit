@@ -81,7 +81,7 @@ function getTimeString() {
 }
 
 function bbLog(s) {
-  console.log("#BikerBit [" + getTimeString() + "] - " + s)
+  console.log("#BikeBit [" + getTimeString() + "] - " + s)
 }
 
 // function toCartesian(longitude, latitude, altitude, radius) {
