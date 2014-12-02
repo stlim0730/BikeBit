@@ -7,6 +7,7 @@ from random import randint
 import re
 
 # START CONSTANTS
+PI = math.pi
 urlRegex = re.compile(
   r'^https?://'  # http:// or https://
   r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|'

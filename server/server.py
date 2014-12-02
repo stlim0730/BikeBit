@@ -1,5 +1,6 @@
 # AUTHOR: SEONGTAEK LIM (seongtaek.lim0730@gmail.com)
 
+from __future__ import division
 import sys
 import os
 import uuid
@@ -11,6 +12,12 @@ from myUtility import *
 
 # START CONSTANTS
 SECOND = 1000
+MINUTE = 60
+HOUR = 60
+M = 100
+KM = 1000
+FOOT = 12
+MILE = 5280
 
 SERVER_PATH = os.path.dirname(__file__)
 ROOT_PATH = os.path.join(SERVER_PATH, os.pardir)
@@ -38,7 +45,7 @@ class indexPageHandler(tornado.web.RequestHandler):
 
 class uploadHandler(tornado.web.RequestHandler):
   def post(self):
-    diameter = self.get_argument("diameterArg")
+    diameter = float(self.get_argument("diameterArg"))
     unit = self.get_argument("unitArg")
     fileObj = self.request.files["fileArg"][0]
     fileName = fileObj["filename"]
@@ -48,21 +55,35 @@ class uploadHandler(tornado.web.RequestHandler):
     uploadFileHandler.write(fileObj["body"])
     uploadFileHandler.close()
     readHandler = readTextFile(tempFileName)
-    result = self.process(readHandler)
+    results = self.process(readHandler, diameter, unit)
     readHandler.close()
-    self.write("OK")
+    self.write(results)
     # self.finish(tempFileName + " is uploaded!! Check %s folder" %uploadPath)
     # self.render("bikeBit.html")
     bbLog("called uploadHandler")
 
-  def process(self, fileHandler):
+  def process(self, fileHandler, diameter, unit):
+    # START TARGET DATA FORMAT
+    # data: {
+    #   xs: {
+    #     'data1': 'x1',
+    #     'data2': 'x2',
+    #   },
+    #   columns: [
+    #     ['x1', 10, 30, 45, 50, 70, 100],
+    #     ['x2', 30, 50, 75, 100, 120],
+    #     ['data1', 30, 200, 100, 400, 150, 250],
+    #     ['data2', 20, 180, 240, 100, 190]
+    #   ]
+    # }
+    # END TARGET DATA FORMAT
+    results = { "data": { "xs":{}, "columns":[] } }
     lineCnt = 0 # LINE COUNT OF INPUT FILE
-    triggerCnt = 0 # COUNT OF DATA POINT
     tempList = [] # TEMPORARY LIST
     triggerLists = [] # GROUPED DATA POINT
-    deltaTLists = [] # LIST OF DELTA T
+    instVLists = [] # LIST OF INSTANTANEOUS V
     maxList = [] # MAXIMUM VALUES OF EACH TRIGGER
-    # results = {"data": { "xs":{}, "columns":[] }}
+    # START INPUT RAW DATA
     line = fileHandler.readline()
     while line!="":
       num = int(line)
@@ -84,15 +105,36 @@ class uploadHandler(tornado.web.RequestHandler):
       line = fileHandler.readline()
     triggerLists.append(tempList) # THE FINAL LIST
     maxList.append(tempList[-1]) # THE ITEM IN THE FINAL LIST
+    # END INPUT RAW DATA
+    # START FORMATTING DATA
+    triggerCnt = 0 # COUNT OF DATA POINT
+    triggerListCnt = 0 # COUNT OF GROUP OF DATA POINT
+    deltaD = PI * diameter # DISTANCE TRAVELED PER ROTATION
     for triggers in triggerLists:
       # FOR EACH TRIGGER DATA GROUP
-      deltaTs = []
-      deltaTs.append(0)
+      instVs = []
+      instVs.append(0)
       for i in range(1, len(triggers)):
-        deltaTs.append((triggers[i] - triggers[i-1]) / SECOND) # DELTA T PER ROTATION IN SECONDS
-      deltaTLists.append(deltaTs)
-      triggerCnt += 1
-    return deltaTLists
+        deltaT = (triggers[i] - triggers[i-1]) / SECOND # DELTA T PER ROTATION IN SECONDS
+        instV = 0
+        if unit=="cm":
+          instV = (((deltaD / M) / KM) * MINUTE * HOUR) / deltaT # INSTANTANEOUS VELOCITY PER ROTATION (km/h)
+        else:
+          instV = (((deltaD / FOOT) / MILE) * MINUTE * HOUR) / deltaT # INSTANTANEOUS VELOCITY PER ROTATION (mph)
+        instVs.append(instV)
+        triggerCnt += 1
+      instVLists.append(instVs)
+      triggerListCnt += 1
+      xName = "x" + str(triggerListCnt)
+      yName = "data" + str(triggerListCnt)
+      triggers.insert(0, xName)
+      instVs.insert(0, yName)
+      results["data"]["xs"][yName] = xName
+      results["data"]["columns"].append(triggers)
+      results["data"]["columns"].append(instVs)
+      results["data"]["type"] = "spline"
+    # END FORMATTING DATA
+    return results
 
 # class bikeBitPageHandler(tornado.web.RequestHandler):
 #   @gen.coroutine
