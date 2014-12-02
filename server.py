@@ -22,7 +22,7 @@ MILE = 5280
 DATA_LABEL = "BikeBit Record"
 
 SERVER_PATH = os.path.dirname(__file__)
-ROOT_PATH = os.path.join(SERVER_PATH, os.pardir)
+ROOT_PATH = SERVER_PATH # os.path.join(SERVER_PATH, os.pardir)
 DEFAULT_SERVER_CONF = os.path.join(SERVER_PATH, "conf/bikeBitServerConf.json")
 # END CONSTANTS
 
@@ -166,6 +166,7 @@ class uploadHandler(tornado.web.RequestHandler):
 # END HANDLERS
 
 # START INITIALIZATION
+# serverApp = tornado.web.Application(
 serverApp = tornado.wsgi.WSGIApplication(
   [
     (r"/", indexPageHandler),
