@@ -34,7 +34,8 @@ serverConf = readJsonFile(serverConfFile)
 serverPort = serverConf["serverOptions"]["port"]
 clientPath = os.path.join(ROOT_PATH, serverConf["serverOptions"]["clientPath"])
 uploadPath = os.path.join(SERVER_PATH, serverConf["serverOptions"]["uploadPath"])
-imagePath = clientPath + "/img";
+imagePath = clientPath + "/img"
+samplePath = clientPath + "/sample"
 # END CONFIGURATION
 
 # START HANDLERS
@@ -169,6 +170,7 @@ serverApp = tornado.web.Application(
     (r"/", indexPageHandler),
     (r"/index(.*)", indexPageBookmarkHandler),
     (r"/img/(.*)", tornado.web.StaticFileHandler, {"path": imagePath}),
+    (r"/sample/(.*)", tornado.web.StaticFileHandler, {"path": samplePath}),
     (r"/upload", uploadHandler)
     # (r"/bikeBit", bikeBitPageHandler),
   ],
