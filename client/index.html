@@ -1,3 +1,5 @@
+<!-- AUTHOR: SEONGTAEK LIM (seongtaek.lim0730@gmail.com) -->
+
 {% extends "main_base.html" %}
 {% block bb_index %}
 
@@ -10,13 +12,13 @@
           <h1>BikerBit</h1>
           <h3>Low-Cost Tracker for Bike Commuters</h3>
           <h4>Check Your Cycling Distance &amp; Speed!</h4>
-          <hr class="intro-divider">
+          <!-- <hr class="intro-divider"> -->
           <!-- <ul class="list-inline intro-social-buttons"> -->
             <!-- <li> -->
               <form id="uploadForm" enctype="multipart/form-data" action="/upload" method="post">
 
                 <div class="col-lg-offset-3 col-md-4 col-lg-4">
-                  <input id="diameterInput" name="diameterArg" type="text" placeholder="How large is your bike wheel?" class="form-control input-md" maxlength="3" /><br />
+                  <input id="diameterInput" name="diameterArg" type="text" placeholder="Tell me the diameter of your bike wheel." class="form-control input-md" maxlength="5" /><br />
                 </div>
                 <div class="col-md-2 col-lg-2">
                   <select id="unitSelect" name="unitArg" class="form-control input-md">
@@ -25,9 +27,9 @@
                   </select>
                 </div>
 
-                <div class="col-lg-offset-4 col-md-4 col-lg-4 btn btn-default btn-lg fileinput-button">
+                <div id="uploadFileDiv" class="col-lg-offset-3 col-md-6 col-lg-6 btn btn-default btn-lg fileinput-button disabled">
                   <i class="fa fa-cloud-upload"></i>
-                  <div class="network-name">&emsp;Upload Your BikerBit.dat</div>
+                  <span class="network-name">&emsp;Upload Your BikerBit.dat</span>
                     <input id="uploadFile" name="fileArg" type="file" accept=".dat" />
                 </div>
               </form>

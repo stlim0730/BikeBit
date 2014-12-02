@@ -1,3 +1,5 @@
+# AUTHOR: SEONGTAEK LIM (seongtaek.lim0730@gmail.com)
+
 import sys
 import os
 import uuid
@@ -36,11 +38,13 @@ class indexPageHandler(tornado.web.RequestHandler):
 
 class uploadHandler(tornado.web.RequestHandler):
   def post(self):
+    diameter = self.get_argument("diameterArg")
+    unit = self.get_argument("unitArg")
     fileObj = self.request.files["fileArg"][0]
     fileName = fileObj["filename"]
     extension = os.path.splitext(fileName)[1]
     tempFileName = str(uuid.uuid4()) + extension
-    uploadFileHandler = open(uploadPath + tempFileName, "w")
+    uploadFileHandler = open(tempFileName, "w")
     uploadFileHandler.write(fileObj["body"])
     uploadFileHandler.close()
     readHandler = readTextFile(tempFileName)
@@ -51,7 +55,7 @@ class uploadHandler(tornado.web.RequestHandler):
     # self.render("bikerBit.html")
     bbLog("called uploadHandler")
 
-  def process(fileHandler):
+  def process(self, fileHandler):
     lineCnt = 0 # LINE COUNT OF INPUT FILE
     triggerCnt = 0 # COUNT OF DATA POINT
     tempList = [] # TEMPORARY LIST
